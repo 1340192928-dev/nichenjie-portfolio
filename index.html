@@ -833,6 +833,7 @@ section {
     <div class="portfolio-filters" id="portfolioFilters">
       <button class="filter-btn active" data-filter="all">全部</button>
       <button class="filter-btn" data-filter="product">产品设计</button>
+      <button class="filter-btn" data-filter="aicg">AICG设计</button>
       <button class="filter-btn" data-filter="space">空间设计</button>
       <button class="filter-btn" data-filter="service">服务设计</button>
     </div>
@@ -991,6 +992,40 @@ const projects = [
       { title: '设计成果', content: '智能药盒产品设计 + 配套APP界面 + 服务系统设计，完整呈现产品服务化的设计思路。' }
     ],
     tags: ['产品设计', '服务设计', '用户研究', 'UI设计', 'Figma', 'Illustrator']
+  },
+  {
+    id: 3,
+    title: 'PET COMPANION POD',
+    titleCn: '智能随行宠物陪伴舱',
+    categories: ['aicg', 'product'],
+    categoryLabel: 'AICG设计 / 产品设计',
+    year: '2026',
+    award: '第14届未来设计师大赛甘肃赛区三等奖',
+    image: 'project3-pet.jpg',
+    images: ['pet-page-01.jpg', 'pet-page-02.jpg', 'pet-page-03.jpg', 'pet-page-04.jpg', 'pet-page-05.jpg', 'pet-page-06.jpg', 'pet-page-07.jpg', 'pet-page-08.jpg', 'pet-page-09.jpg', 'pet-page-10.jpg', 'pet-page-11.jpg', 'pet-page-12.jpg', 'pet-page-13.jpg', 'pet-page-14.jpg', 'project3-award.jpg'],
+    role: '主创设计师',
+    duration: '4 个月',
+    client: '未来设计师大赛',
+    desc: [
+      '「智能随行宠物陪伴舱」是一款面向多场景的智能宠物出行空间设计。项目针对当前宠物出行中的安全、舒适、服务等痛点，从产品、服务、系统三个维度构建完整的宠物出行解决方案。',
+      '产品以 AI 智能陪伴为核心亮点，集成语音互动、行为识别、健康监测、环境自适应等功能，打造宠物专属的智能移动空间。设计过程中运用 AIGC 工具辅助概念生成与效果呈现，大幅提升设计表达效率。',
+      '整体造型采用圆润有机的设计语言，传递安全感与陪伴感。内部空间充分考虑宠物行为习惯与舒适需求，配备智能喂食、空气净化、氛围灯光等系统，为宠物提供全方位的出行体验。',
+      '该作品荣获第14届未来设计师·全国高校数字艺术设计大赛（NCDA）甘肃赛区三等奖，是对设计创新与实践价值的充分肯定。'
+    ],
+    highlights: [
+      'AIGC 辅助设计：AI 生成概念与效果图，提升设计效率与表现力',
+      '多场景适配：机场/商场/办公/车载等多出行场景全覆盖',
+      'AI 智能陪伴：语音互动、行为识别、健康监测一体化',
+      '服务系统设计：APP 预约 + 智能柜 + 服务生态的完整闭环',
+      '获奖作品：第14届未来设计师大赛甘肃赛区三等奖'
+    ],
+    sections: [
+      { title: '项目背景', content: '宠物出行场景日益丰富，但现有出行产品普遍存在安全性不足、舒适度差、功能单一等问题，亟需智能化、系统化的解决方案。' },
+      { title: '设计方法', content: '市场调研 → 用户旅程 → 痛点定义 → AIGC概念发散 → 方案迭代 → 系统设计 → 获奖验证' },
+      { title: '核心功能', content: 'AI智能陪伴、健康监测、环境自适应、安全守护、APP远程控制、多场景应用' },
+      { title: '获奖荣誉', content: '第14届未来设计师·全国高校数字艺术设计大赛（NCDA）省级赛甘肃赛区 三等奖' }
+    ],
+    tags: ['AICG设计', '产品设计', '智能硬件', '服务设计', '未来设计师', '获奖作品']
   }
 ];
 
@@ -999,7 +1034,10 @@ const grid = document.getElementById('portfolioGrid');
 
 function renderProjects(filter) {
   filter = filter || 'all';
-  const filtered = filter === 'all' ? projects : projects.filter(function(p) { return p.category === filter; });
+  const filtered = filter === 'all' ? projects : projects.filter(function(p) {
+    if (Array.isArray(p.categories)) return p.categories.indexOf(filter) >= 0;
+    return p.category === filter;
+  });
   grid.innerHTML = filtered.map(function(p) {
     return '<article class="project-card" data-id="' + p.id + '">' +
       '<div class="project-card-inner">' +
