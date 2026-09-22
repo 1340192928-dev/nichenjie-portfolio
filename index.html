@@ -920,6 +920,12 @@ section {
       <div class="modal-section-title">项目亮点</div>
       <ul class="modal-list" id="modalList"><li>服务设计思维驱动的产品创新</li><li>针对老年用户的易用性优化</li><li>完整的产品+服务系统设计</li></ul>
       <div class="modal-sections" id="modalSections"></div>
+      <div class="modal-gallery-label" id="modalVideoLabel" style="display:none;">展示视频</div>
+      <div id="modalVideoSection" style="display:none; margin-bottom: 24px;">
+        <video id="modalVideo" controls preload="metadata" poster="" style="width:100%; border:3px solid var(--black); background:var(--black);">
+          <source src="" type="video/mp4">
+        </video>
+      </div>
       <div class="modal-gallery-label" id="galleryLabel" style="display:none;">作品展示</div>
       <div class="modal-gallery" id="modalGallery"></div>
       <div class="modal-section-title">使用工具</div>
@@ -960,7 +966,7 @@ const projects = [
       { title: '设计方法', content: '用户访谈 → 场景分析 → 问题定义 → 概念发散 → 方案收敛 → 原型验证' },
       { title: '设计成果', content: '完成完整的产品设计方案，包含外观模型、功能结构、人机界面及使用场景演示。' }
     ],
-    tags: ['产品设计', '人机工程', '三维建模', 'SketchUp', 'D5 Render', 'Photoshop']
+    tags: ['产品设计', '服务设计', '人机工程', '三维建模', 'SketchUp', 'D5 Render', 'Photoshop']
   },
   {
     id: 2,
@@ -1001,8 +1007,11 @@ const projects = [
     categoryLabel: 'AICG设计 / 产品设计',
     year: '2026',
     award: '第14届未来设计师大赛甘肃赛区三等奖',
-    image: 'project3-pet.jpg',
-    images: ['pet-page-01.jpg', 'pet-page-02.jpg', 'pet-page-03.jpg', 'pet-page-04.jpg', 'pet-page-05.jpg', 'pet-page-06.jpg', 'pet-page-07.jpg', 'pet-page-08.jpg', 'pet-page-09.jpg', 'pet-page-10.jpg', 'pet-page-11.jpg', 'pet-page-12.jpg', 'pet-page-13.jpg', 'pet-page-14.jpg', 'project3-award.jpg'],
+    image: 'project3-pet.png',
+    video: 'pet-video.mp4',
+    board: 'pet-board.jpg',
+    structure: 'pet-structure.png',
+    images: ['pet-board.jpg', 'pet-structure.png', 'pet-page-01.jpg', 'pet-page-05.jpg', 'pet-page-07.jpg', 'pet-page-10.jpg', 'pet-page-12.jpg', 'project3-award.jpg'],
     role: '主创设计师',
     duration: '4 个月',
     client: '未来设计师大赛',
@@ -1025,7 +1034,7 @@ const projects = [
       { title: '核心功能', content: 'AI智能陪伴、健康监测、环境自适应、安全守护、APP远程控制、多场景应用' },
       { title: '获奖荣誉', content: '第14届未来设计师·全国高校数字艺术设计大赛（NCDA）省级赛甘肃赛区 三等奖' }
     ],
-    tags: ['AICG设计', '产品设计', '智能硬件', '服务设计', '未来设计师', '获奖作品']
+    tags: ['AICG设计', '产品设计', '服务设计', '智能硬件', '未来设计师', '获奖作品']
   }
 ];
 
@@ -1095,6 +1104,22 @@ function openModal(project) {
     }).join('');
   } else {
     sectionsEl.innerHTML = '';
+  }
+
+  // 视频播放
+  var videoSection = document.getElementById('modalVideoSection');
+  var videoLabel = document.getElementById('modalVideoLabel');
+  var videoEl = document.getElementById('modalVideo');
+  if (project.video) {
+    videoLabel.style.display = 'inline-block';
+    videoSection.style.display = 'block';
+    videoEl.querySelector('source').src = project.video;
+    if (project.image) videoEl.poster = project.image;
+    videoEl.load();
+  } else {
+    videoLabel.style.display = 'none';
+    videoSection.style.display = 'none';
+    videoEl.pause();
   }
 
   var galleryEl = document.getElementById('modalGallery');
