@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,16 +57,306 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* 背景纹理 */
 .bg-texture {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.04;
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.06;
   background-image:
     linear-gradient(var(--black) 1px, transparent 1px),
     linear-gradient(90deg, var(--black) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 .bg-noise {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.03;
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
+
+/* 工业扫描线效果 */
+.scanlines {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+}
+
+/* CRT 闪烁效果 */
+.crt-flicker {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background: transparent;
+  animation: crtFlicker 0.15s infinite;
+  opacity: 0.02;
+}
+@keyframes crtFlicker {
+  0% { opacity: 0.02; }
+  50% { opacity: 0.04; }
+  100% { opacity: 0.01; }
+}
+
+/* 工业边角装饰 */
+.industrial-corner {
+  position: absolute; width: 40px; height: 40px;
+  pointer-events: none; z-index: 5;
+}
+.industrial-corner::before, .industrial-corner::after {
+  content: ''; position: absolute; background: var(--black);
+}
+.industrial-corner.tl::before { top: 0; left: 0; width: 3px; height: 100%; }
+.industrial-corner.tl::after { top: 0; left: 0; width: 100%; height: 3px; }
+.industrial-corner.tr::before { top: 0; right: 0; width: 3px; height: 100%; }
+.industrial-corner.tr::after { top: 0; right: 0; width: 100%; height: 3px; }
+.industrial-corner.bl::before { bottom: 0; left: 0; width: 3px; height: 100%; }
+.industrial-corner.bl::after { bottom: 0; left: 0; width: 100%; height: 3px; }
+.industrial-corner.br::before { bottom: 0; right: 0; width: 3px; height: 100%; }
+.industrial-corner.br::after { bottom: 0; right: 0; width: 100%; height: 3px; }
+
+/* 齿轮装饰 */
+.gear-deco {
+  position: absolute; pointer-events: none; z-index: 0;
+  opacity: 0.08;
+  animation: gearSpin 20s linear infinite;
+}
+.gear-deco.reverse { animation-direction: reverse; animation-duration: 25s; }
+.gear-deco svg { width: 100%; height: 100%; }
+@keyframes gearSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 故障文字效果 */
+.glitch-text {
+  position: relative;
+}
+.glitch-text::before, .glitch-text::after {
+  content: attr(data-text);
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.glitch-text::before {
+  color: var(--red);
+  animation: glitch1 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  transform: translateX(-2px);
+  opacity: 0;
+}
+.glitch-text::after {
+  color: var(--black);
+  animation: glitch2 2.5s infinite linear alternate-reverse;
+  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  transform: translateX(2px);
+  opacity: 0;
+}
+.glitch-text:hover::before, .glitch-text:hover::after { opacity: 0.7; }
+@keyframes glitch1 {
+  0%, 100% { transform: translateX(-2px); }
+  20% { transform: translateX(2px); }
+  40% { transform: translateX(-1px); }
+  60% { transform: translateX(1px); }
+  80% { transform: translateX(-3px); }
+}
+@keyframes glitch2 {
+  0%, 100% { transform: translateX(2px); }
+  20% { transform: translateX(-2px); }
+  40% { transform: translateX(1px); }
+  60% { transform: translateX(-1px); }
+  80% { transform: translateX(3px); }
+}
+
+/* 机械标签/铭牌 */
+.machine-plate {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 6px 16px;
+  background: var(--black);
+  border: 2px solid var(--black);
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+.machine-plate::before, .machine-plate::after {
+  content: ''; position: absolute;
+  width: 6px; height: 6px;
+  background: var(--white-2);
+  border: 1px solid var(--black);
+  border-radius: 50%;
+}
+.machine-plate::before { top: -3px; left: 8px; }
+.machine-plate::after { bottom: -3px; right: 8px; }
+
+/* 刻度线装饰 */
+.scale-ruler {
+  position: absolute; pointer-events: none;
+  opacity: 0.3;
+}
+.scale-ruler-h {
+  height: 16px; width: 100%;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--black) 0px,
+    var(--black) 1px,
+    transparent 1px,
+    transparent 8px
+  );
+}
+.scale-ruler-v {
+  width: 16px; height: 100%;
+  background-image: repeating-linear-gradient(
+    0deg,
+    var(--black) 0px,
+    var(--black) 1px,
+    transparent 1px,
+    transparent 8px
+  );
+}
+
+/* 十字准星 */
+.crosshair {
+  position: absolute; pointer-events: none;
+  width: 40px; height: 40px;
+  opacity: 0.2;
+}
+.crosshair::before, .crosshair::after {
+  content: ''; position: absolute;
+  background: var(--red);
+}
+.crosshair::before {
+  top: 50%; left: 0; right: 0; height: 1px;
+  transform: translateY(-50%);
+}
+.crosshair::after {
+  left: 50%; top: 0; bottom: 0; width: 1px;
+  transform: translateX(-50%);
+}
+.crosshair .ch-center {
+  position: absolute; top: 50%; left: 50%;
+  width: 6px; height: 6px;
+  border: 1px solid var(--red);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 警告条纹 */
+.warning-stripe {
+  height: 12px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--black) 0px,
+    var(--black) 10px,
+    var(--yellow) 10px,
+    var(--yellow) 20px
+  );
+  opacity: 0.7;
+}
+
+/* 数据指示灯 */
+.status-led {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 6px var(--red), inset 0 0 2px rgba(0,0,0,0.3);
+  animation: ledBlink 1.2s ease-in-out infinite;
+}
+.status-led.green { background: #22c55e; box-shadow: 0 0 6px #22c55e, inset 0 0 2px rgba(0,0,0,0.3); }
+.status-led.yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow), inset 0 0 2px rgba(0,0,0,0.3); }
+@keyframes ledBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* 终端/打字机光标 */
+.terminal-cursor::after {
+  content: '_';
+  animation: blinkCursor 1s step-end infinite;
+  color: var(--red);
+  font-weight: 700;
+}
+@keyframes blinkCursor {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* 进度条/加载条 */
+.industrial-bar {
+  height: 6px;
+  background: var(--black-3);
+  border: 1px solid var(--black);
+  position: relative;
+  overflow: hidden;
+}
+.industrial-bar-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--red) 0px,
+    var(--red) 6px,
+    var(--red-dark) 6px,
+    var(--red-dark) 12px
+  );
+  position: relative;
+}
+.industrial-bar-fill::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.3) 50%,
+    transparent 100%
+  );
+  animation: barShine 2s linear infinite;
+}
+@keyframes barShine {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+/* 边框螺钉装饰 */
+.border-screws {
+  position: relative;
+}
+.border-screws::before, .border-screws::after {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+  background: var(--black-3);
+  border: 2px solid var(--black);
+  border-radius: 50%;
+}
+.border-screws::before { top: -5px; left: 16px; }
+.border-screws::after { bottom: -5px; right: 16px; }
+
+/* 卡片四角螺钉 */
+.card-screw {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--black-3);
+  border: 2px solid var(--black);
+  border-radius: 50%;
+  z-index: 3;
+  pointer-events: none;
+}
+.card-screw::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 1px;
+  background: var(--black);
+  transform: translate(-50%, -50%);
+}
+.card-screw-tl { top: 8px; left: 8px; }
+.card-screw-tr { top: 8px; right: 8px; }
+.card-screw-bl { bottom: 8px; left: 8px; }
+.card-screw-br { bottom: 8px; right: 8px; }
 
 /* 鼠标跟随光晕 */
 .cursor-glow {
@@ -599,6 +889,8 @@ section {
 
 <div class="bg-texture" aria-hidden="true"></div>
 <div class="bg-noise" aria-hidden="true"></div>
+<div class="scanlines" aria-hidden="true"></div>
+<div class="crt-flicker" aria-hidden="true"></div>
 <div class="cursor-glow" id="cursorGlow" aria-hidden="true" style="opacity: 0; left: 671px; top: 0px;"></div>
 
 <!-- 浮动彩色粒子 -->
@@ -631,6 +923,41 @@ section {
 
 <!-- HERO -->
 <section class="hero" id="hero">
+  <!-- 工业边角装饰 -->
+  <div class="industrial-corner tl" style="top:24px;left:24px;"></div>
+  <div class="industrial-corner tr" style="top:24px;right:24px;"></div>
+  <div class="industrial-corner bl" style="bottom:24px;left:24px;"></div>
+  <div class="industrial-corner br" style="bottom:24px;right:24px;"></div>
+
+  <!-- 工业齿轮装饰 -->
+  <div class="gear-deco" style="width:140px;height:140px;top:12%;right:18%;">
+    <svg viewBox="0 0 100 100" fill="currentColor">
+      <path d="M50,5 C65,5 78,15 85,30 L92,28 L95,38 L88,42 C89,45 89,48 89,50 C89,52 89,55 88,58 L95,62 L92,72 L85,70 C78,85 65,95 50,95 C35,95 22,85 15,70 L8,72 L5,62 L12,58 C11,55 11,52 11,50 C11,48 11,45 12,42 L5,38 L8,28 L15,30 C22,15 35,5 50,5 Z M50,28 C38,28 28,38 28,50 C28,62 38,72 50,72 C62,72 72,62 72,50 C72,38 62,28 50,28 Z M50,40 C55,40 60,45 60,50 C60,55 55,60 50,60 C45,60 40,55 40,50 C40,45 45,40 50,40 Z"/>
+    </svg>
+  </div>
+  <div class="gear-deco reverse" style="width:90px;height:90px;bottom:25%;left:8%;">
+    <svg viewBox="0 0 100 100" fill="currentColor">
+      <path d="M50,5 C65,5 78,15 85,30 L92,28 L95,38 L88,42 C89,45 89,48 89,50 C89,52 89,55 88,58 L95,62 L92,72 L85,70 C78,85 65,95 50,95 C35,95 22,85 15,70 L8,72 L5,62 L12,58 C11,55 11,52 11,50 C11,48 11,45 12,42 L5,38 L8,28 L15,30 C22,15 35,5 50,5 Z M50,28 C38,28 28,38 28,50 C28,62 38,72 50,72 C62,72 72,62 72,50 C72,38 62,28 50,28 Z M50,40 C55,40 60,45 60,50 C60,55 55,60 50,60 C45,60 40,55 40,50 C40,45 45,40 50,40 Z"/>
+    </svg>
+  </div>
+  <div class="gear-deco" style="width:50px;height:50px;top:60%;right:12%;animation-duration:15s;">
+    <svg viewBox="0 0 100 100" fill="currentColor">
+      <path d="M50,5 C65,5 78,15 85,30 L92,28 L95,38 L88,42 C89,45 89,48 89,50 C89,52 89,55 88,58 L95,62 L92,72 L85,70 C78,85 65,95 50,95 C35,95 22,85 15,70 L8,72 L5,62 L12,58 C11,55 11,52 11,50 C11,48 11,45 12,42 L5,38 L8,28 L15,30 C22,15 35,5 50,5 Z M50,28 C38,28 28,38 28,50 C28,62 38,72 50,72 C62,72 72,62 72,50 C72,38 62,28 50,28 Z"/>
+    </svg>
+  </div>
+
+  <!-- 十字准星装饰 -->
+  <div class="crosshair" style="top:20%;left:15%;">
+    <div class="ch-center"></div>
+  </div>
+  <div class="crosshair" style="bottom:30%;right:8%;opacity:0.15;">
+    <div class="ch-center"></div>
+  </div>
+
+  <!-- 刻度线装饰 -->
+  <div class="scale-ruler scale-ruler-h" style="top:70px;left:80px;right:80px;"></div>
+  <div class="scale-ruler scale-ruler-v" style="left:70px;top:90px;bottom:90px;"></div>
+
   <div class="hero-deco hero-deco-top-right" aria-hidden="true"></div>
   <div class="hero-deco hero-deco-bottom-left" aria-hidden="true"></div>
   <div class="rivet rivet-1" aria-hidden="true"></div>
@@ -656,25 +983,25 @@ section {
   </div>
 
   <div class="hero-content">
-    <div class="hero-status">
-      <span class="hero-status-dot"></span>
-      AVAILABLE FOR OPPORTUNITIES · 2026
+    <div class="hero-status machine-plate" style="margin-bottom: 20px;">
+      <span class="status-led green"></span>
+      SYSTEM ONLINE · 2026
     </div>
 
-    <div class="hero-name-en">
+    <div class="hero-name-en glitch-text" data-text="NI CHENJIE">
       <span class="filled">NI</span><span class="outline"> CHEN</span><span class="red">JIE</span>
     </div>
 
     <div class="hero-name-cn">倪辰杰</div>
 
-    <div class="hero-role">
+    <div class="hero-role terminal-cursor">
       <span class="hero-role-sep"></span>
       环境设计师
       <span style="color: var(--red);">/</span>
       ENVIRONMENTAL DESIGNER
     </div>
 
-    <p class="hero-tagline">
+    <p class="hero-tagline" id="typewriter">
       环境设计专业，专注于空间设计、产品设计与服务设计的交叉领域。善于从用户需求出发，用设计解决实际问题。
     </p>
 
@@ -711,7 +1038,8 @@ section {
   </div>
 </section>
 
-<!-- 关于 -->
+<!-- 关于我 -->
+<div class="warning-stripe" aria-hidden="true"></div>
 <section class="about reveal visible" id="about">
   <div>
     <div class="section-num">01 / ABOUT</div>
@@ -735,13 +1063,14 @@ section {
 </section>
 
 <!-- 技能 -->
+<div class="warning-stripe" style="opacity:0.5;" aria-hidden="true"></div>
 <section class="reveal visible" id="skills">
   <div class="section-num">02 / SKILLS</div>
   <h2 class="section-title">技能<span class="red">矩阵</span></h2>
   <p class="section-subtitle">覆盖环境设计全链路，从概念到落地，从软件到思维。</p>
 
   <div class="skills-grid">
-    <div class="skill-card">
+    <div class="skill-card border-screws">
       <div class="skill-card-num">001</div>
       <h3 class="skill-card-title">设计软件</h3>
       <div class="skill-tags">
@@ -753,8 +1082,12 @@ section {
         <span class="skill-tag">BLENDER</span>
         <span class="skill-tag">InDesign</span>
       </div>
+      <div class="industrial-bar" style="margin-top: 16px;">
+        <div class="industrial-bar-fill" style="width: 90%;"></div>
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 0.7rem; margin-top: 6px; text-align: right; opacity: 0.6;">PROFICIENCY: 90%</div>
     </div>
-    <div class="skill-card">
+    <div class="skill-card border-screws">
       <div class="skill-card-num">002</div>
       <h3 class="skill-card-title">专业能力</h3>
       <div class="skill-tags">
@@ -765,8 +1098,12 @@ section {
         <span class="skill-tag">服务设计</span>
         <span class="skill-tag">场地调研</span>
       </div>
+      <div class="industrial-bar" style="margin-top: 16px;">
+        <div class="industrial-bar-fill" style="width: 85%;"></div>
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 0.7rem; margin-top: 6px; text-align: right; opacity: 0.6;">PROFICIENCY: 85%</div>
     </div>
-    <div class="skill-card">
+    <div class="skill-card border-screws">
       <div class="skill-card-num">003</div>
       <h3 class="skill-card-title">综合能力</h3>
       <div class="skill-tags">
@@ -776,11 +1113,16 @@ section {
         <span class="skill-tag">市场推广</span>
         <span class="skill-tag">日语 CET-4</span>
       </div>
+      <div class="industrial-bar" style="margin-top: 16px;">
+        <div class="industrial-bar-fill" style="width: 80%;"></div>
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 0.7rem; margin-top: 6px; text-align: right; opacity: 0.6;">PROFICIENCY: 80%</div>
     </div>
   </div>
 </section>
 
 <!-- 经历 -->
+<div class="warning-stripe" style="opacity:0.5;" aria-hidden="true"></div>
 <section class="reveal visible" id="experience">
   <div class="section-num">03 / EXPERIENCE</div>
   <h2 class="section-title">经历<span class="red">档案</span></h2>
@@ -855,6 +1197,7 @@ section {
 </section>
 
 <!-- 作品集 -->
+<div class="warning-stripe" style="opacity:0.5;" aria-hidden="true"></div>
 <section class="reveal visible" id="portfolio">
   <div class="section-num">04 / PORTFOLIO</div>
   <div class="portfolio-header">
@@ -873,6 +1216,7 @@ section {
 </section>
 
 <!-- 联系方式 -->
+<div class="warning-stripe" style="opacity:0.5;" aria-hidden="true"></div>
 <section class="contact reveal visible" id="contact">
   <div class="section-num">05 / CONTACT</div>
   <h2 class="contact-title">
@@ -1081,6 +1425,10 @@ function renderProjects(filter) {
   grid.innerHTML = filtered.map(function(p) {
     return '<article class="project-card" data-id="' + p.id + '">' +
       '<div class="project-card-inner">' +
+      '<div class="card-screw card-screw-tl"></div>' +
+      '<div class="card-screw card-screw-tr"></div>' +
+      '<div class="card-screw card-screw-bl"></div>' +
+      '<div class="card-screw card-screw-br"></div>' +
       '<div class="project-visual">' +
       (p.image ? '<img src="' + p.image + '" alt="' + p.titleCn + '" class="project-visual-bg" style="object-fit: cover; width: 100%; height: 100%;">' : '<div class="project-visual-bg ' + (p.pattern || '') + '"></div>') +
       '<span class="project-num">PRJ-' + String(p.id).padStart(3, '0') + '</span>' +
@@ -1240,6 +1588,29 @@ try {
 } catch (e) {
   document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('visible'); });
 }
+
+// 打字机效果
+(function() {
+  var el = document.getElementById('typewriter');
+  if (!el) return;
+  var text = el.textContent;
+  el.textContent = '';
+  el.style.borderRight = '2px solid var(--red)';
+  el.style.paddingRight = '4px';
+  var i = 0;
+  function type() {
+    if (i < text.length) {
+      el.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, 50 + Math.random() * 30);
+    } else {
+      setTimeout(function() {
+        el.style.borderRightColor = 'transparent';
+      }, 1000);
+    }
+  }
+  setTimeout(type, 800);
+})();
 
 // 鼠标跟随光晕
 var cursorGlow = document.getElementById('cursorGlow');
