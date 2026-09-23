@@ -664,10 +664,63 @@ section {
   font-family: var(--font-display); font-size: clamp(3rem, 12vw, 10rem);
   line-height: 0.85; letter-spacing: 0.02em; text-transform: uppercase; font-weight: 400; position: relative;
   color: var(--white);
+  perspective: 800px;
+  transform-style: preserve-3d;
+  cursor: default;
 }
 .hero-name-en .outline { -webkit-text-stroke: 2px var(--cyan); color: transparent; }
 .hero-name-en .filled { color: var(--white); }
 .hero-name-en .red { color: var(--cyan); text-shadow: 0 0 20px var(--cyan-glow); }
+
+/* 字母交互动效 */
+.name-letter {
+  display: inline-block;
+  transition: transform 0.25s var(--ease-out), color 0.2s, text-shadow 0.2s;
+  position: relative;
+}
+.name-letter:hover {
+  transform: translateY(-6px) scale(1.05);
+  color: var(--cyan) !important;
+  text-shadow: 0 0 20px var(--cyan-glow), 0 0 40px var(--cyan-dim);
+}
+.name-letter.outline:hover {
+  -webkit-text-stroke: 2px var(--cyan) !important;
+  color: var(--cyan) !important;
+  text-shadow: 0 0 20px var(--cyan-glow);
+}
+
+/* 故障闪烁效果 */
+@keyframes glitchFlicker {
+  0% { transform: translate(0); filter: hue-rotate(0deg); }
+  10% { transform: translate(-3px, 1px); filter: hue-rotate(90deg); }
+  20% { transform: translate(3px, -1px); filter: hue-rotate(180deg); }
+  30% { transform: translate(-2px, 2px); filter: hue-rotate(270deg); }
+  40% { transform: translate(2px, -2px); filter: hue-rotate(360deg); }
+  50% { transform: translate(-1px, 1px); filter: hue-rotate(0deg); }
+  60% { transform: translate(1px, -1px); filter: hue-rotate(90deg); }
+  70% { transform: translate(-3px, 0); filter: hue-rotate(180deg); }
+  80% { transform: translate(3px, 0); filter: hue-rotate(270deg); }
+  90% { transform: translate(-1px, 1px); filter: hue-rotate(360deg); }
+  100% { transform: translate(0); filter: hue-rotate(0deg); }
+}
+.hero-name-en.glitching {
+  animation: glitchFlicker 0.5s ease-in-out;
+}
+
+/* 3D 倾斜容器 */
+.hero-name-en.tilt-active {
+  transition: transform 0.1s ease-out;
+}
+
+/* 字母涟漪入场（点击时触发） */
+@keyframes letterRipple {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.15) translateY(-8px); }
+  100% { transform: scale(1) translateY(0); }
+}
+.name-letter.ripple {
+  animation: letterRipple 0.6s var(--ease-out);
+}
 
 .hero-name-cn {
   font-family: var(--font-body); font-weight: 900;
@@ -1503,8 +1556,8 @@ section {
       SYSTEM ONLINE · 2026
     </div>
 
-    <div class="hero-name-en">
-      <span class="outline">NI</span><span class="filled"> CHEN</span><span class="red">JIE</span>
+    <div class="hero-name-en" id="heroNameEn">
+      <span class="name-letter outline" data-letter="N">N</span><span class="name-letter outline" data-letter="I">I</span><span class="name-letter filled" data-letter=" ">&nbsp;</span><span class="name-letter filled" data-letter="C">C</span><span class="name-letter filled" data-letter="H">H</span><span class="name-letter filled" data-letter="E">E</span><span class="name-letter filled" data-letter="N">N</span><span class="name-letter red" data-letter="J">J</span><span class="name-letter red" data-letter="I">I</span><span class="name-letter red" data-letter="E">E</span>
     </div>
 
     <div class="hero-name-cn">
@@ -2319,6 +2372,84 @@ sectionTitles.forEach(function(title) {
     titleObserver.observe(title);
   }
 });
+
+// 9. Hero 标题 NI CHENJIE 交互动效
+(function() {
+  var heroName = document.getElementById('heroNameEn');
+  if (!heroName) return;
+
+  var letters = heroName.querySelectorAll('.name-letter');
+
+  // 3D 倾斜跟随鼠标
+  heroName.addEventListener('mousemove', function(e) {
+    var rect = heroName.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+    var centerX = rect.width / 2;
+    var centerY = rect.height / 2;
+    var rotateY = ((x - centerX) / centerX) * 8; // 左右倾斜
+    var rotateX = ((centerY - y) / centerY) * 6; // 上下倾斜（反向）
+
+    heroName.classList.add('tilt-active');
+    heroName.style.transform = 'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
+  });
+
+  heroName.addEventListener('mouseleave', function() {
+    heroName.style.transform = 'perspective(800px) rotateX(0) rotateY(0)';
+    heroName.classList.remove('tilt-active');
+  });
+
+  // 点击触发故障闪烁 + 字母涟漪
+  heroName.addEventListener('click', function(e) {
+    // 整体故障闪烁
+    heroName.classList.remove('glitching');
+    // 强制重绘以重启动画
+    void heroName.offsetWidth;
+    heroName.classList.add('glitching');
+
+    setTimeout(function() {
+      heroName.classList.remove('glitching');
+    }, 500);
+
+    // 字母涟漪（从点击位置扩散）
+    var rect = heroName.getBoundingClientRect();
+    var clickX = e.clientX - rect.left;
+    var clickY = e.clientY - rect.top;
+
+    letters.forEach(function(letter, index) {
+      var letterRect = letter.getBoundingClientRect();
+      var letterCenterX = letterRect.left - rect.left + letterRect.width / 2;
+      var letterCenterY = letterRect.top - rect.top + letterRect.height / 2;
+      var distance = Math.sqrt(
+        Math.pow(clickX - letterCenterX, 2) + Math.pow(clickY - letterCenterY, 2)
+      );
+      // 距离越远，延迟越大
+      var delay = distance * 0.8;
+
+      setTimeout(function() {
+        letter.classList.remove('ripple');
+        void letter.offsetWidth;
+        letter.classList.add('ripple');
+
+        setTimeout(function() {
+          letter.classList.remove('ripple');
+        }, 600);
+      }, delay);
+    });
+  });
+
+  // 初始入场动画：字母依次浮现
+  letters.forEach(function(letter, index) {
+    letter.style.opacity = '0';
+    letter.style.transform = 'translateY(20px)';
+    letter.style.transition = 'opacity 0.6s ' + (index * 0.08) + 's, transform 0.6s ' + (index * 0.08) + 's';
+
+    setTimeout(function() {
+      letter.style.opacity = '1';
+      letter.style.transform = 'translateY(0)';
+    }, 300 + index * 80);
+  });
+})();
 
 // 8. 点击复制功能
 var copyItems = document.querySelectorAll('.copy-item');
