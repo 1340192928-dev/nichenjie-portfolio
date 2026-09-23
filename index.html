@@ -462,22 +462,28 @@ section {
 
 .section-num {
   font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
-  color: var(--cyan); letter-spacing: 0.2em; margin-bottom: 12px;
+  color: var(--cyan); letter-spacing: 0.2em; margin-bottom: 16px;
   display: flex; align-items: center; gap: 12px;
-  text-shadow: 0 0 8px var(--cyan-glow);
+  text-shadow: 0 0 6px var(--cyan-glow);
+  opacity: 0.9;
 }
-.section-num::after { content: ''; flex: 1; max-width: 80px; height: 1px; background: var(--cyan); box-shadow: 0 0 4px var(--cyan-glow); }
+.section-num::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: linear-gradient(90deg, var(--cyan), transparent); box-shadow: 0 0 4px var(--cyan-glow); }
 
 .section-title {
   font-family: var(--font-display); font-size: clamp(2.5rem, 7vw, 5rem);
   font-weight: 400; letter-spacing: 0.02em; line-height: 0.95;
-  text-transform: uppercase; margin-bottom: 16px;
+  text-transform: uppercase; margin-bottom: 20px;
   color: var(--white);
+  position: relative;
 }
-.section-title .red { color: var(--cyan); text-shadow: 0 0 12px var(--cyan-glow); }
+.section-title .red { color: var(--cyan); text-shadow: 0 0 16px var(--cyan-glow); }
 .section-subtitle {
-  font-family: var(--font-industrial); font-size: 1rem; color: var(--gray);
-  letter-spacing: 0.05em; max-width: 480px; margin-bottom: 48px;
+  font-family: var(--font-body); font-size: 0.95rem; color: var(--gray);
+  letter-spacing: 0.02em; max-width: 480px; margin-bottom: 56px;
+  line-height: 1.7;
+  padding-left: 16px;
+  border-left: 2px solid var(--cyan);
+  opacity: 0.9;
 }
 
 /* HERO */
@@ -497,10 +503,73 @@ section {
 .rivet-3 { bottom: 34px; left: 274px; }
 .rivet-4 { bottom: 34px; left: 14px; }
 
-.hero-stripe { position: absolute; top: 30%; right: -10%; width: 300px; height: 40px; background: var(--cyan); transform: rotate(-15deg); z-index: 0; opacity: 0.6; box-shadow: 0 0 20px var(--cyan-glow); }
-.hero-stripe-2 { position: absolute; top: 38%; right: -5%; width: 180px; height: 20px; background: var(--amber); transform: rotate(-15deg); z-index: 0; opacity: 0.5; box-shadow: 0 0 12px var(--amber-glow); }
+/* ========== 鹰角风格极简装饰 ========== */
 
-/* 证件照区域 */
+/* 斜切装饰线 - 鹰角标志性几何切割 */
+.ak-slice {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.4;
+}
+.ak-slice-1 {
+  top: 18%;
+  right: 0;
+  width: 35%;
+  height: 1px;
+  transform: rotate(-12deg);
+  transform-origin: right center;
+  box-shadow: 0 0 8px var(--cyan-glow);
+}
+.ak-slice-1::after {
+  content: '';
+  position: absolute;
+  right: 0; top: -3px;
+  width: 6px; height: 6px;
+  background: var(--cyan);
+  transform: rotate(45deg);
+  box-shadow: 0 0 8px var(--cyan-glow);
+}
+.ak-slice-2 {
+  bottom: 22%;
+  left: 0;
+  width: 25%;
+  height: 1px;
+  transform: rotate(6deg);
+  transform-origin: left center;
+  opacity: 0.25;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+}
+
+/* 精致数据角标 */
+.ak-data-tag {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: rgba(10, 14, 20, 0.7);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  backdrop-filter: blur(6px);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+.ak-data-tag::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 3px; height: 100%;
+  background: var(--cyan);
+  box-shadow: 0 0 6px var(--cyan-glow);
+}
+.ak-dt-key { color: var(--gray); text-transform: uppercase; }
+.ak-dt-val { color: var(--cyan); font-weight: 700; text-shadow: 0 0 6px var(--cyan-glow); }
+.ak-dt-tr { top: 90px; right: 60px; }
+
+/* 证件照 - 鹰角科技感相框 */
 .hero-photo-wrap {
   position: absolute;
   top: 50%; right: 8%;
@@ -508,40 +577,59 @@ section {
   z-index: 2;
   width: clamp(180px, 22vw, 280px);
 }
-.hero-photo-frame {
-  border: 4px solid var(--black);
-  background: var(--white);
-  padding: 8px 8px 40px 8px;
-  transform: rotate(3deg);
-  box-shadow: 12px 12px 0 var(--red), 24px 24px 0 var(--black);
-  transition: transform 0.4s var(--ease-out);
+.ak-photo-frame {
   position: relative;
+  background: var(--black-3);
+  padding: 6px;
+  clip-path: polygon(
+    12px 0, calc(100% - 12px) 0, 100% 12px,
+    100% calc(100% - 12px), calc(100% - 12px) 100%,
+    12px 100%, 0 calc(100% - 12px), 0 12px
+  );
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s;
+  box-shadow: 0 0 0 1px var(--cyan), 0 0 30px var(--cyan-dim);
 }
-.hero-photo-frame:hover {
-  transform: rotate(-2deg) scale(1.05);
+.ak-photo-frame:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 0 1px var(--cyan), 0 8px 40px var(--cyan-glow);
 }
-.hero-photo-frame img {
+.ak-photo-frame img {
   width: 100%; aspect-ratio: 3/4; object-fit: cover;
-  filter: contrast(1.05);
+  clip-path: polygon(
+    8px 0, calc(100% - 8px) 0, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 8px) 100%,
+    8px 100%, 0 calc(100% - 8px), 0 8px
+  );
+  filter: contrast(1.05) saturate(0.95);
 }
-.hero-photo-tape {
+/* 相框四角标记 */
+.ak-photo-corner {
   position: absolute;
-  top: -18px; left: 50%;
-  transform: translateX(-50%) rotate(-2deg);
-  width: 80px; height: 30px;
-  background: rgba(251, 191, 36, 0.6);
-  border: 1px solid rgba(0,0,0,0.1);
+  width: 14px; height: 14px;
+  border: 1px solid var(--cyan);
+  z-index: 3;
+  box-shadow: 0 0 4px var(--cyan-glow);
 }
-.hero-photo-caption {
+.ak-pc-tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.ak-pc-tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+.ak-pc-bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+.ak-pc-br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+/* ID标签 */
+.ak-photo-id {
+  position: absolute;
+  bottom: 10px; left: 50%;
+  transform: translateX(-50%);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--gray-dark);
-  text-align: center;
-  margin-top: 8px;
-  letter-spacing: 0.1em;
+  font-size: 0.65rem;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  background: rgba(10, 14, 20, 0.85);
+  padding: 3px 12px;
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  text-shadow: 0 0 4px var(--cyan-glow);
+  z-index: 4;
+  white-space: nowrap;
 }
-
-/* 贴纸装饰 */
 .sticker {
   position: absolute;
   font-family: var(--font-mono);
@@ -604,6 +692,80 @@ section {
 }
 
 .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* 鹰角风格编号前缀 */
+.hero-index {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--gray);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.hero-index-line {
+  display: inline-block;
+  width: 40px; height: 1px;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+  box-shadow: 0 0 4px var(--cyan-glow);
+}
+.hero-index-num {
+  color: var(--cyan);
+  font-weight: 600;
+  text-shadow: 0 0 4px var(--cyan-glow);
+  opacity: 0.8;
+}
+
+/* 中文名装饰线 */
+.hero-name-cn {
+  font-family: var(--font-body); font-weight: 900;
+  font-size: clamp(1.5rem, 4vw, 2.8rem); letter-spacing: 0.3em;
+  margin: 16px 0 24px; padding-left: 4px;
+  color: var(--white-2);
+  display: flex; align-items: center; gap: 16px;
+}
+.cn-sep {
+  font-weight: 300;
+  font-size: 0.5em;
+  color: var(--cyan);
+  opacity: 0.6;
+  letter-spacing: 0;
+}
+
+/* 职位标签 */
+.hero-role {
+  font-family: var(--font-mono); font-size: clamp(0.85rem, 2vw, 1rem);
+  font-weight: 500; letter-spacing: 0.05em;
+  color: var(--white-2); display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap; margin-bottom: 32px;
+}
+.hero-role-tag {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  background: var(--cyan-dim);
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  color: var(--cyan);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-shadow: 0 0 4px var(--cyan-glow);
+}
+.hero-role-divider {
+  color: var(--gray-dark);
+  font-weight: 400;
+}
+.hero-role-text {
+  color: var(--white-2);
+}
+
+/* 按钮箭头 */
+.btn-arrow {
+  font-size: 1.1em;
+  font-weight: 700;
+  transition: transform 0.2s;
+}
+.btn-primary:hover .btn-arrow {
+  transform: translateX(3px);
+}
 
 .btn {
   font-family: var(--font-industrial); font-size: 0.85rem; font-weight: 600;
@@ -696,15 +858,48 @@ section {
 
 .project-card { cursor: pointer; position: relative; transition: transform 0.3s var(--ease-out); }
 .project-card:hover { transform: translate(-6px, -6px); }
-.project-card-inner { border: 1px solid var(--cyan); background: var(--black-2); transition: all 0.3s var(--ease-out); position: relative; box-shadow: 0 0 16px var(--cyan-dim); }
-.project-card:hover .project-card-inner { box-shadow: 8px 8px 0 var(--cyan-dark), 0 0 30px var(--cyan-glow); }
+.project-card-inner {
+  border: 1px solid var(--cyan);
+  background: var(--black-2);
+  transition: all 0.3s var(--ease-out);
+  position: relative;
+  box-shadow: 0 0 16px var(--cyan-dim);
+  clip-path: polygon(
+    16px 0, calc(100% - 0px) 0, 100% 0px,
+    100% calc(100% - 16px), calc(100% - 16px) 100%,
+    0 100%, 0 16px
+  );
+}
+.project-card:hover .project-card-inner {
+  box-shadow: 8px 8px 0 var(--cyan-dark), 0 0 30px var(--cyan-glow);
+  clip-path: polygon(
+    16px 0, calc(100% - 0px) 0, 100% 0px,
+    100% calc(100% - 16px), calc(100% - 16px) 100%,
+    0 100%, 0 16px
+  );
+}
 
 .project-visual { aspect-ratio: 4 / 3; position: relative; overflow: hidden; border-bottom: 1px solid var(--cyan); background: var(--black-3); }
 .project-visual-bg { position: absolute; inset: 0; transition: transform 0.5s var(--ease-out); }
 .project-card:hover .project-visual-bg { transform: scale(1.05); }
 
-.project-num { position: absolute; top: 16px; left: 16px; z-index: 2; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--black); background: var(--cyan); padding: 4px 10px; letter-spacing: 0.1em; box-shadow: 0 0 8px var(--cyan-glow); }
-.project-corner { position: absolute; top: 0; right: 0; width: 0; height: 0; border-style: solid; border-width: 0 40px 40px 0; border-color: transparent var(--cyan) transparent transparent; z-index: 2; }
+.project-num {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
+  color: var(--black); background: var(--cyan);
+  padding: 3px 10px; letter-spacing: 0.1em;
+  box-shadow: 0 0 8px var(--cyan-glow);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+.project-corner {
+  position: absolute; top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 36px 36px 0;
+  border-color: transparent var(--cyan) transparent transparent;
+  z-index: 2;
+  filter: drop-shadow(0 0 4px var(--cyan-glow));
+}
 
 .project-info { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
 .project-title { font-family: var(--font-industrial); font-size: 1.25rem; font-weight: 700; letter-spacing: 0.03em; color: var(--white); }
@@ -795,32 +990,26 @@ section {
   -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
 }
 
-/* Endfield HUD 全局边角 */
+/* Endfield HUD 全局边角（更精致克制） */
 .hud-corner {
   position: fixed;
-  width: 80px; height: 80px;
+  width: 60px; height: 60px;
   pointer-events: none;
   z-index: 50;
-  opacity: 0.6;
+  opacity: 0.35;
 }
 .hud-corner::before, .hud-corner::after {
   content: '';
   position: absolute;
   background: var(--cyan);
-  box-shadow: 0 0 8px var(--cyan-glow);
+  box-shadow: 0 0 6px var(--cyan-glow);
 }
-.hud-tl { top: 16px; left: 16px; }
-.hud-tl::before { top: 0; left: 0; width: 2px; height: 100%; }
-.hud-tl::after { top: 0; left: 0; width: 100%; height: 2px; }
-.hud-tr { top: 16px; right: 16px; }
-.hud-tr::before { top: 0; right: 0; width: 2px; height: 100%; }
-.hud-tr::after { top: 0; right: 0; width: 100%; height: 2px; }
-.hud-bl { bottom: 16px; left: 16px; }
-.hud-bl::before { bottom: 0; left: 0; width: 2px; height: 100%; }
-.hud-bl::after { bottom: 0; left: 0; width: 100%; height: 2px; }
-.hud-br { bottom: 16px; right: 16px; }
-.hud-br::before { bottom: 0; right: 0; width: 2px; height: 100%; }
-.hud-br::after { bottom: 0; right: 0; width: 100%; height: 2px; }
+.hud-tl { top: 12px; left: 12px; }
+.hud-tl::before { top: 0; left: 0; width: 1px; height: 100%; }
+.hud-tl::after { top: 0; left: 0; width: 100%; height: 1px; }
+.hud-br { bottom: 12px; right: 12px; }
+.hud-br::before { bottom: 0; right: 0; width: 1px; height: 100%; }
+.hud-br::after { bottom: 0; right: 0; width: 100%; height: 1px; }
 
 /* Endfield 数据面板 */
 .endfield-data-panel {
@@ -1050,10 +1239,8 @@ section {
 <!-- Endfield 科技网格背景 -->
 <div class="tech-grid-bg" aria-hidden="true"></div>
 
-<!-- Endfield HUD 边角装饰 -->
+<!-- Endfield HUD 边角装饰（只保留对角，更克制） -->
 <div class="hud-corner hud-tl" aria-hidden="true"></div>
-<div class="hud-corner hud-tr" aria-hidden="true"></div>
-<div class="hud-corner hud-bl" aria-hidden="true"></div>
 <div class="hud-corner hud-br" aria-hidden="true"></div>
 
 <!-- 导航栏 -->
@@ -1082,111 +1269,86 @@ section {
 <section class="hero" id="hero">
   <!-- 工业边角装饰 -->
   <div class="industrial-corner tl" style="top:24px;left:24px;"></div>
-  <div class="industrial-corner tr" style="top:24px;right:24px;"></div>
-  <div class="industrial-corner bl" style="bottom:24px;left:24px;"></div>
   <div class="industrial-corner br" style="bottom:24px;right:24px;"></div>
 
-  <!-- 工业齿轮装饰 -->
-  <div class="gear-deco" style="width:140px;height:140px;top:12%;right:18%;">
+  <!-- 精致齿轮装饰（左下角，不遮挡证件照） -->
+  <div class="gear-deco" style="width:60px;height:60px;bottom:20%;left:6%;opacity:0.1;animation-duration:30s;">
     <svg viewBox="0 0 100 100" fill="currentColor">
       <path d="M50,5 C65,5 78,15 85,30 L92,28 L95,38 L88,42 C89,45 89,48 89,50 C89,52 89,55 88,58 L95,62 L92,72 L85,70 C78,85 65,95 50,95 C35,95 22,85 15,70 L8,72 L5,62 L12,58 C11,55 11,52 11,50 C11,48 11,45 12,42 L5,38 L8,28 L15,30 C22,15 35,5 50,5 Z M50,28 C38,28 28,38 28,50 C28,62 38,72 50,72 C62,72 72,62 72,50 C72,38 62,28 50,28 Z M50,40 C55,40 60,45 60,50 C60,55 55,60 50,60 C45,60 40,55 40,50 C40,45 45,40 50,40 Z"/>
     </svg>
   </div>
-  <div class="gear-deco reverse" style="width:90px;height:90px;bottom:25%;left:8%;">
-    <svg viewBox="0 0 100 100" fill="currentColor">
-      <path d="M50,5 C65,5 78,15 85,30 L92,28 L95,38 L88,42 C89,45 89,48 89,50 C89,52 89,55 88,58 L95,62 L92,72 L85,70 C78,85 65,95 50,95 C35,95 22,85 15,70 L8,72 L5,62 L12,58 C11,55 11,52 11,50 C11,48 11,45 12,42 L5,38 L8,28 L15,30 C22,15 35,5 50,5 Z M50,28 C38,28 28,38 28,50 C28,62 38,72 50,72 C62,72 72,62 72,50 C72,38 62,28 50,28 Z M50,40 C55,40 60,45 60,50 C60,55 55,60 50,60 C45,60 40,55 40,50 C40,45 45,40 50,40 Z"/>
-    </svg>
-  </div>
-  <div class="gear-deco" style="width:50px;height:50px;top:60%;right:12%;animation-duration:15s;">
-    <svg viewBox="0 0 100 100" fill="currentColor">
-      <path d="M50,5 C65,5 78,15 85,30 L92,28 L95,38 L88,42 C89,45 89,48 89,50 C89,52 89,55 88,58 L95,62 L92,72 L85,70 C78,85 65,95 50,95 C35,95 22,85 15,70 L8,72 L5,62 L12,58 C11,55 11,52 11,50 C11,48 11,45 12,42 L5,38 L8,28 L15,30 C22,15 35,5 50,5 Z M50,28 C38,28 28,38 28,50 C28,62 38,72 50,72 C62,72 72,62 72,50 C72,38 62,28 50,28 Z"/>
-    </svg>
-  </div>
 
-  <!-- 十字准星装饰 -->
-  <div class="crosshair" style="top:20%;left:15%;">
+  <!-- 十字准星装饰（精致小尺寸） -->
+  <div class="crosshair" style="top:28%;left:12%;width:28px;height:28px;opacity:0.25;">
     <div class="ch-center"></div>
   </div>
-  <div class="crosshair" style="bottom:30%;right:8%;opacity:0.15;">
-    <div class="ch-center"></div>
-  </div>
-
-  <!-- 刻度线装饰 -->
-  <div class="scale-ruler scale-ruler-h" style="top:70px;left:80px;right:80px;"></div>
-  <div class="scale-ruler scale-ruler-v" style="left:70px;top:90px;bottom:90px;"></div>
 
   <div class="hero-deco hero-deco-top-right" aria-hidden="true"></div>
   <div class="hero-deco hero-deco-bottom-left" aria-hidden="true"></div>
-  <div class="rivet rivet-1" aria-hidden="true"></div>
-  <div class="rivet rivet-2" aria-hidden="true"></div>
-  <div class="rivet rivet-3" aria-hidden="true"></div>
-  <div class="rivet rivet-4" aria-hidden="true"></div>
-  <div class="hero-stripe" aria-hidden="true"></div>
-  <div class="hero-stripe-2" aria-hidden="true"></div>
 
-  <!-- Endfield 风格数据面板 -->
-  <div class="endfield-data-panel edp-tl">
-    <div class="edp-label">OPERATOR ID</div>
-    <div class="edp-value">NCJ-0027</div>
-    <div class="edp-bar"><div class="edp-bar-fill"></div></div>
-  </div>
-  <div class="endfield-data-panel edp-tr">
-    <div class="edp-label">STATUS</div>
-    <div class="edp-value edp-online">● ONLINE</div>
-    <div class="edp-label" style="margin-top:6px;">SECTOR</div>
-    <div class="edp-value">DESIGN-03</div>
-  </div>
-  <div class="endfield-data-panel edp-bl">
-    <div class="edp-label">COORD</div>
-    <div class="edp-value">N31°23' E120°37'</div>
-    <div class="edp-label" style="margin-top:6px;">DATE</div>
-    <div class="edp-value">2026.09.23</div>
-  </div>
+  <!-- 鹰角风格斜切装饰线 -->
+  <div class="ak-slice ak-slice-1" aria-hidden="true"></div>
+  <div class="ak-slice ak-slice-2" aria-hidden="true"></div>
 
-  <!-- 六边形装饰 -->
-  <div class="hex-deco hex-1" aria-hidden="true"></div>
-  <div class="hex-deco hex-2" aria-hidden="true"></div>
-  <div class="hex-deco hex-3" aria-hidden="true"></div>
-
+  <!-- 精致数据角标（右上，不遮挡证件照） -->
+  <div class="ak-data-tag ak-dt-tr">
+    <span class="ak-dt-key">OP_ID</span>
+    <span class="ak-dt-val">NCJ·0027</span>
+  </div>
 
   <!-- 证件照 -->
   <div class="hero-photo-wrap">
-    <div class="hero-photo-frame">
-      <div class="hero-photo-tape" aria-hidden="true"></div>
+    <div class="ak-photo-frame">
+      <div class="ak-photo-corner ak-pc-tl"></div>
+      <div class="ak-photo-corner ak-pc-tr"></div>
+      <div class="ak-photo-corner ak-pc-bl"></div>
+      <div class="ak-photo-corner ak-pc-br"></div>
       <img src="profile.jpg" alt="倪辰杰证件照">
-      <div class="hero-photo-caption">NI CHENJIE / 2026</div>
+      <div class="ak-photo-id">ID·NI CHENJIE</div>
     </div>
   </div>
 
   <div class="hero-content">
-    <div class="hero-status machine-plate" style="margin-bottom: 20px;">
+    <!-- 编号前缀 -->
+    <div class="hero-index">
+      <span class="hero-index-line"></span>
+      <span class="hero-index-num">// 01 · PROFILE</span>
+    </div>
+
+    <div class="hero-status machine-plate" style="margin-bottom: 24px;">
       <span class="status-led green"></span>
       SYSTEM ONLINE · 2026
     </div>
 
-    <div class="hero-name-en glitch-text" data-text="NI CHENJIE">
-      <span class="filled">NI</span><span class="outline"> CHEN</span><span class="red">JIE</span>
+    <div class="hero-name-en">
+      <span class="outline">NI</span><span class="filled"> CHEN</span><span class="red">JIE</span>
     </div>
 
-    <div class="hero-name-cn">倪辰杰</div>
-
-    <div class="hero-role terminal-cursor">
-      <span class="hero-role-sep"></span>
-      环境设计师
-      <span style="color: var(--red);">/</span>
-      ENVIRONMENTAL DESIGNER
+    <div class="hero-name-cn">
+      <span class="cn-sep">—</span>
+      倪辰杰
+      <span class="cn-sep">—</span>
     </div>
 
-    <p class="hero-tagline" id="typewriter">
-      环境设计专业，专注于空间设计、产品设计与服务设计的交叉领域。善于从用户需求出发，用设计解决实际问题。
+    <div class="hero-role">
+      <span class="hero-role-tag">DESIGNER</span>
+      <span class="hero-role-divider">//</span>
+      <span class="hero-role-text">环境设计师 · ENVIRONMENTAL DESIGNER</span>
+    </div>
+
+    <p class="hero-tagline">
+      环境设计专业，专注于空间设计、产品设计与服务设计的交叉领域。<br>
+      善于从用户需求出发，用设计解决实际问题。
     </p>
 
     <div class="hero-actions">
       <a href="#portfolio" class="btn btn-primary">
+        <span class="btn-arrow">→</span>
         查看作品
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
       </a>
-      <a href="#contact" class="btn btn-secondary">联系我</a>
+      <a href="#contact" class="btn btn-secondary">
+        联系我
+      </a>
     </div>
   </div>
 
