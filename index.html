@@ -1079,6 +1079,62 @@ section {
 }
 .copy-toast-icon svg { width: 100%; height: 100%; }
 
+/* 微信二维码 */
+.contact-qr-section {
+  margin-bottom: 32px;
+  display: inline-block;
+}
+.contact-qr-frame {
+  position: relative;
+  display: inline-block;
+  padding: 16px;
+  background: rgba(17, 24, 32, 0.6);
+  border: 1px solid var(--cyan);
+  box-shadow: 0 0 20px var(--cyan-dim);
+  clip-path: polygon(
+    12px 0, calc(100% - 12px) 0, 100% 12px,
+    100% calc(100% - 12px), calc(100% - 12px) 100%,
+    12px 100%, 0 calc(100% - 12px), 0 12px
+  );
+  transition: all 0.3s var(--ease-out);
+}
+.contact-qr-frame:hover {
+  box-shadow: 0 0 30px var(--cyan-glow);
+  transform: translateY(-4px);
+}
+.contact-qr-img {
+  width: 140px;
+  height: 140px;
+  display: block;
+  background: white;
+  padding: 4px;
+}
+.contact-qr-label {
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  text-align: center;
+  text-shadow: 0 0 4px var(--cyan-glow);
+}
+/* 四角装饰 */
+.contact-qr-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: var(--cyan);
+  border-style: solid;
+  border-width: 0;
+  box-shadow: 0 0 6px var(--cyan-glow);
+}
+.contact-qr-corner.tl { top: 4px; left: 4px; border-top-width: 2px; border-left-width: 2px; }
+.contact-qr-corner.tr { top: 4px; right: 4px; border-top-width: 2px; border-right-width: 2px; }
+.contact-qr-corner.bl { bottom: 4px; left: 4px; border-bottom-width: 2px; border-left-width: 2px; }
+.contact-qr-corner.br { bottom: 4px; right: 4px; border-bottom-width: 2px; border-right-width: 2px; }
+
 .contact-socials { display: flex; gap: 12px; }
 .contact-social { width: 48px; height: 48px; border: 1px solid var(--cyan); display: flex; align-items: center; justify-content: center; color: var(--cyan); transition: all 0.2s; box-shadow: 0 0 8px var(--cyan-dim); }
 .contact-social:hover { background: var(--cyan); border-color: var(--cyan); color: var(--black); transform: translate(-3px, -3px); box-shadow: 4px 4px 0 var(--cyan-dark), 0 0 16px var(--cyan-glow); }
@@ -1818,6 +1874,18 @@ section {
     <div class="contact-info-item">
       <div class="contact-info-label">LOCATION</div>
       <div class="contact-info-value">江苏苏州</div>
+    </div>
+  </div>
+
+  <!-- 微信二维码 -->
+  <div class="contact-qr-section">
+    <div class="contact-qr-frame">
+      <div class="contact-qr-corner tl"></div>
+      <div class="contact-qr-corner tr"></div>
+      <div class="contact-qr-corner bl"></div>
+      <div class="contact-qr-corner br"></div>
+      <img src="wechat-qr.jpg" alt="微信二维码" class="contact-qr-img">
+      <div class="contact-qr-label">扫码添加微信</div>
     </div>
   </div>
 
