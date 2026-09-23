@@ -966,9 +966,65 @@ section {
 .contact-info-item:nth-last-child(-n+3) { border-bottom: none; }
 .contact-info-item:hover { background: var(--cyan-dim); box-shadow: inset 0 0 20px var(--cyan-dim); }
 .contact-info-item:hover .contact-info-label { color: var(--cyan); text-shadow: 0 0 4px var(--cyan-glow); }
-.contact-info-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--gray); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; transition: color 0.2s; }
+.contact-info-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--gray); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
 .contact-info-value { font-family: var(--font-industrial); font-size: 1rem; font-weight: 700; letter-spacing: 0.02em; color: var(--white); }
 .contact-info-value a:hover { color: var(--cyan); text-shadow: 0 0 6px var(--cyan-glow); }
+
+/* 点击复制样式 */
+.copy-item { cursor: pointer; position: relative; }
+.copy-item .copy-hint {
+  font-size: 0.6rem;
+  font-weight: 400;
+  color: var(--cyan);
+  opacity: 0;
+  transition: opacity 0.2s;
+  letter-spacing: 0.1em;
+}
+.copy-item:hover .copy-hint { opacity: 0.8; }
+.copy-item .copy-text { transition: color 0.2s; }
+.copy-item:hover .copy-text { color: var(--cyan); text-shadow: 0 0 6px var(--cyan-glow); }
+.copy-item.copied { background: var(--cyan-dim) !important; }
+.copy-item.copied .copy-text { color: var(--cyan); text-shadow: 0 0 8px var(--cyan-glow); }
+.copy-item.copied .copy-hint { opacity: 1; color: var(--cyan); }
+
+/* 复制成功 Toast 提示 */
+.copy-toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(10, 14, 20, 0.95);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  padding: 12px 24px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s var(--ease-out);
+  box-shadow: 0 0 20px var(--cyan-glow);
+  clip-path: polygon(
+    8px 0, calc(100% - 8px) 0, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 8px) 100%,
+    8px 100%, 0 calc(100% - 8px), 0 8px
+  );
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.copy-toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.copy-toast-icon {
+  width: 16px; height: 16px;
+  color: var(--cyan);
+}
+.copy-toast-icon svg { width: 100%; height: 100%; }
 
 .contact-socials { display: flex; gap: 12px; }
 .contact-social { width: 48px; height: 48px; border: 1px solid var(--cyan); display: flex; align-items: center; justify-content: center; color: var(--cyan); transition: all 0.2s; box-shadow: 0 0 8px var(--cyan-dim); }
@@ -1694,13 +1750,13 @@ section {
   </p>
 
   <div class="contact-info-grid">
-    <div class="contact-info-item">
-      <div class="contact-info-label">EMAIL</div>
-      <div class="contact-info-value"><a href="mailto:1340192928@qq.com">1340192928@qq.com</a></div>
+    <div class="contact-info-item copy-item" data-copy="1340192928@qq.com" data-copy-label="邮箱">
+      <div class="contact-info-label">EMAIL <span class="copy-hint">点击复制</span></div>
+      <div class="contact-info-value"><span class="copy-text">1340192928@qq.com</span></div>
     </div>
-    <div class="contact-info-item">
-      <div class="contact-info-label">PHONE</div>
-      <div class="contact-info-value"><a href="tel:13773227758">137-7322-7758</a></div>
+    <div class="contact-info-item copy-item" data-copy="13773227758" data-copy-label="电话">
+      <div class="contact-info-label">PHONE <span class="copy-hint">点击复制</span></div>
+      <div class="contact-info-value"><span class="copy-text">137-7322-7758</span></div>
     </div>
     <div class="contact-info-item">
       <div class="contact-info-label">LOCATION</div>
@@ -1736,6 +1792,14 @@ section {
 <button class="back-to-top visible" id="backToTop" aria-label="回到顶部">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
 </button>
+
+<!-- 复制成功提示 -->
+<div class="copy-toast" id="copyToast" aria-hidden="true">
+  <span class="copy-toast-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  </span>
+  <span id="copyToastText">已复制到剪贴板</span>
+</div>
 
 <!-- 弹窗 -->
 <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -2254,6 +2318,82 @@ sectionTitles.forEach(function(title) {
   if (title.querySelector('.char-animate')) {
     titleObserver.observe(title);
   }
+});
+
+// 8. 点击复制功能
+var copyItems = document.querySelectorAll('.copy-item');
+var copyToast = document.getElementById('copyToast');
+var copyToastText = document.getElementById('copyToastText');
+var copyToastTimer = null;
+
+function showCopyToast(label) {
+  copyToastText.textContent = label + '已复制到剪贴板';
+  copyToast.classList.add('show');
+
+  if (copyToastTimer) {
+    clearTimeout(copyToastTimer);
+  }
+
+  copyToastTimer = setTimeout(function() {
+    copyToast.classList.remove('show');
+  }, 2000);
+}
+
+function copyToClipboard(text) {
+  // 优先使用现代 Clipboard API
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(text);
+  }
+  // 降级方案：使用 textarea + execCommand
+  var textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  textarea.style.pointerEvents = 'none';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    return Promise.resolve();
+  } catch (err) {
+    document.body.removeChild(textarea);
+    return Promise.reject(err);
+  }
+}
+
+copyItems.forEach(function(item) {
+  item.addEventListener('click', function() {
+    var text = item.getAttribute('data-copy');
+    var label = item.getAttribute('data-copy-label') || '';
+
+    copyToClipboard(text).then(function() {
+      // 成功状态
+      item.classList.add('copied');
+      var hint = item.querySelector('.copy-hint');
+      if (hint) {
+        var originalText = hint.textContent;
+        hint.textContent = '✓ 已复制';
+        setTimeout(function() {
+          item.classList.remove('copied');
+          hint.textContent = originalText;
+        }, 1500);
+      }
+      showCopyToast(label);
+    }).catch(function() {
+      // 失败提示
+      var hint = item.querySelector('.copy-hint');
+      if (hint) {
+        var originalText = hint.textContent;
+        hint.textContent = '复制失败';
+        hint.style.color = '#ff6b6b';
+        setTimeout(function() {
+          hint.textContent = originalText;
+          hint.style.color = '';
+        }, 1500);
+      }
+    });
+  });
 });
 </script>
 
