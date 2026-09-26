@@ -861,6 +861,64 @@ section {
 .about-spec-value { font-weight: 700; text-align: right; color: var(--white); }
 .about-spec-value.red { color: var(--cyan); text-shadow: 0 0 8px var(--cyan-glow); }
 
+/* 证书 */
+.cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; }
+.cert-card { cursor: pointer; transition: transform 0.3s var(--ease-out); }
+.cert-card:hover { transform: translateY(-6px); }
+.cert-card-inner {
+  border: 1px solid var(--cyan);
+  background: var(--black-2);
+  position: relative;
+  box-shadow: 0 0 16px var(--cyan-dim);
+  transition: box-shadow 0.3s;
+  overflow: hidden;
+}
+.cert-card:hover .cert-card-inner { box-shadow: 8px 8px 0 var(--cyan-dark), 0 0 30px var(--cyan-glow); }
+.cert-card-img-wrap {
+  width: 100%;
+  padding-bottom: 70%;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--cyan);
+  background: var(--black-3);
+}
+.cert-card-img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease-out);
+}
+.cert-card:hover .cert-card-img { transform: scale(1.05); }
+.cert-card-info { padding: 20px 22px; }
+.cert-card-title { font-size: 1.1rem; font-weight: 700; color: var(--white-1); margin-bottom: 10px; }
+.cert-card-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.cert-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  background: var(--cyan);
+  color: var(--black-1);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+.cert-date { font-size: 0.8rem; color: var(--white-3); font-family: var(--font-mono); }
+.cert-card-desc { font-size: 0.88rem; color: var(--white-2); line-height: 1.7; }
+.cert-card-corner {
+  position: absolute;
+  width: 14px; height: 14px;
+  border-color: var(--cyan);
+  border-style: solid;
+  border-width: 0;
+  pointer-events: none;
+}
+.cert-card-corner.tl { top: 6px; left: 6px; border-top-width: 2px; border-left-width: 2px; }
+.cert-card-corner.tr { top: 6px; right: 6px; border-top-width: 2px; border-right-width: 2px; }
+.cert-card-corner.bl { bottom: 6px; left: 6px; border-bottom-width: 2px; border-left-width: 2px; }
+.cert-card-corner.br { bottom: 6px; right: 6px; border-bottom-width: 2px; border-right-width: 2px; }
+
 /* 技能 */
 .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0; border: 1px solid var(--cyan); box-shadow: 0 0 20px var(--cyan-dim); }
 .skill-card { padding: 28px 24px; border-right: 1px solid var(--cyan); border-bottom: 1px solid var(--cyan); transition: all 0.2s; position: relative; overflow: hidden; background: rgba(17, 24, 32, 0.4); }
@@ -955,9 +1013,61 @@ section {
 /* 弹窗 */
 .modal-overlay { position: fixed; inset: 0; z-index: 1100; background: rgba(5, 8, 12, 0.92); backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; display: flex; align-items: flex-start; justify-content: center; padding: 5vh clamp(16px, 4vw, 40px); overflow-y: auto; }
 .modal-overlay.open { opacity: 1; visibility: visible; }
-
 .modal { background: var(--black-2); border: 1px solid var(--cyan); max-width: 720px; width: 100%; overflow: hidden; transform: translateY(40px); opacity: 0; transition: transform 0.4s var(--ease-out), opacity 0.4s; position: relative; box-shadow: 0 0 60px var(--cyan-glow); }
 .modal-overlay.open .modal { transform: translateY(0); opacity: 1; }
+
+/* 证书弹窗 */
+.cert-overlay { position: fixed; inset: 0; z-index: 1200; background: rgba(5, 8, 12, 0.94); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; display: flex; align-items: center; justify-content: center; padding: 5vh 5vw; }
+.cert-overlay.open { opacity: 1; visibility: visible; }
+.cert-modal {
+  background: var(--black-2);
+  border: 1px solid var(--cyan);
+  max-width: 800px;
+  width: 100%;
+  box-shadow: 0 0 60px var(--cyan-glow);
+  position: relative;
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform 0.4s var(--ease-out), opacity 0.4s;
+}
+.cert-overlay.open .cert-modal { transform: scale(1); opacity: 1; }
+.cert-modal-close {
+  position: absolute;
+  top: 12px; right: 16px;
+  font-size: 2rem;
+  color: var(--white-2);
+  cursor: pointer;
+  z-index: 10;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.cert-modal-close:hover { color: var(--cyan); }
+.cert-modal-title {
+  padding: 24px 28px 4px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--white-1);
+}
+.cert-modal-subtitle {
+  padding: 0 28px 16px;
+  font-size: 0.85rem;
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--cyan);
+}
+.cert-modal-img-wrap {
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  background: var(--black-3);
+}
+.cert-modal-img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  box-shadow: 0 0 30px var(--cyan-dim);
+}
 
 .modal-close { position: absolute; top: 0; right: 0; width: 48px; height: 48px; background: var(--cyan); color: var(--black); z-index: 10; display: flex; align-items: center; justify-content: center; transition: all 0.2s; border-left: 1px solid var(--cyan); border-bottom: 1px solid var(--cyan); }
 .modal-close:hover { background: var(--red); border-color: var(--red); }
@@ -1686,10 +1796,40 @@ section {
   </div>
 </section>
 
+<!-- 证书荣誉 -->
+<div class="warning-stripe" style="opacity:0.5;" aria-hidden="true"></div>
+<section class="reveal visible" id="certificates">
+  <div class="section-num">02 / CERTIFICATES</div>
+  <h2 class="section-title">证书<span class="red">荣誉</span></h2>
+  <p class="section-subtitle">专业资质与获奖认证，持续学习与成长的见证。</p>
+
+  <div class="cert-grid">
+    <div class="cert-card" onclick="openCertModal('jlpt-n4-cert.jpg', 'JLPT 日本语能力测试 N4 合格', '2025 · 日本语能力试验')">
+      <div class="cert-card-inner">
+        <div class="cert-card-img-wrap">
+          <img src="jlpt-n4-cert.jpg" alt="JLPT N4 合格证明" class="cert-card-img">
+        </div>
+        <div class="cert-card-info">
+          <div class="cert-card-title">JLPT 日本语能力测试 N4</div>
+          <div class="cert-card-meta">
+            <span class="cert-badge">合格证书</span>
+            <span class="cert-date">2025</span>
+          </div>
+          <div class="cert-card-desc">日本语能力试验（JLPT）四级合格，具备基础日语读写与日常会话能力。</div>
+        </div>
+        <div class="cert-card-corner tl"></div>
+        <div class="cert-card-corner tr"></div>
+        <div class="cert-card-corner bl"></div>
+        <div class="cert-card-corner br"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- 技能 -->
 <div class="warning-stripe" style="opacity:0.5;" aria-hidden="true"></div>
 <section class="reveal visible" id="skills">
-  <div class="section-num">02 / SKILLS</div>
+  <div class="section-num">03 / SKILLS</div>
   <h2 class="section-title">技能<span class="red">矩阵</span></h2>
   <p class="section-subtitle">覆盖环境设计全链路，从概念到落地，从软件到思维。</p>
 
@@ -1748,7 +1888,7 @@ section {
 <!-- 经历 -->
 <div class="warning-stripe" style="opacity:0.5;" aria-hidden="true"></div>
 <section class="reveal visible" id="experience">
-  <div class="section-num">03 / EXPERIENCE</div>
+  <div class="section-num">04 / EXPERIENCE</div>
   <h2 class="section-title">经历<span class="red">档案</span></h2>
   <p class="section-subtitle">从校园到职场，从国内到海外，每一步都在拓宽设计的边界。</p>
 
@@ -1823,7 +1963,7 @@ section {
 <!-- 作品集 -->
 <div class="warning-stripe" style="opacity:0.5;" aria-hidden="true"></div>
 <section class="reveal visible" id="portfolio">
-  <div class="section-num">04 / PORTFOLIO</div>
+  <div class="section-num">05 / PORTFOLIO</div>
   <div class="portfolio-header">
     <div>
       <h2 class="section-title">精选<span class="red">作品</span></h2>
@@ -1842,7 +1982,7 @@ section {
 <!-- 联系方式 -->
 <div class="warning-stripe" style="opacity:0.5;" aria-hidden="true"></div>
 <section class="contact reveal visible" id="contact">
-  <div class="section-num">05 / CONTACT</div>
+  <div class="section-num">06 / CONTACT</div>
   <h2 class="contact-title">
     LET'S<br>
     <span class="red">WORK</span><br>
@@ -2182,6 +2322,34 @@ function closeModal() {
   document.body.style.overflow = '';
   if (lastFocused) lastFocused.focus();
 }
+
+// 证书弹窗
+var certOverlay, certModal;
+function openCertModal(imgSrc, title, subtitle) {
+  if (!certOverlay) {
+    certOverlay = document.createElement('div');
+    certOverlay.className = 'cert-overlay';
+    certOverlay.innerHTML = '<div class="cert-modal"><div class="cert-modal-close" onclick="closeCertModal()">&times;</div><div class="cert-modal-title"></div><div class="cert-modal-subtitle"></div><div class="cert-modal-img-wrap"><img class="cert-modal-img" alt=""></div></div>';
+    document.body.appendChild(certOverlay);
+    certOverlay.addEventListener('click', function(e) {
+      if (e.target === certOverlay) closeCertModal();
+    });
+  }
+  certOverlay.querySelector('.cert-modal-title').textContent = title;
+  certOverlay.querySelector('.cert-modal-subtitle').textContent = subtitle;
+  certOverlay.querySelector('.cert-modal-img').src = imgSrc;
+  certOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCertModal() {
+  if (certOverlay) certOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeCertModal();
+  }
+});
 
 modalClose.addEventListener('click', closeModal);
 overlay.addEventListener('click', function(e) {
